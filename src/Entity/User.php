@@ -10,7 +10,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="`user`")
- */
+ * @UniqueEntity(fields: ['name', 'apiToken'],  message: 'Этот емейл уже занят')
+  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
@@ -38,6 +39,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     
     private $plainPassword;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $apiToken;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $name;
+
+
+
     public function getId(): ?int
     {
         return $this->id;
@@ -48,9 +61,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->email;
     }
 
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function getQuestion(): ?Question
+    {
+        return $this->question;
+    }
+
+
     public function setEmail(string $email): self
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
 
         return $this;
     }
@@ -133,6 +164,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPlainPassword($password)
     {
         $this->plainPassword = $password;
+    }
+
+    public function getApiToken(): ?string
+    {
+        return $this->apiToken;
+    }
+
+    public function setApiToken(string $apiToken): self
+    {
+        $this->apiToken = $apiToken;
+
+        return $this;
     }
     
 }
